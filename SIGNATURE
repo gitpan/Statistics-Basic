@@ -1,0 +1,43 @@
+This file contains message digests of all files listed in MANIFEST,
+signed via the Module::Signature module, version 0.36.
+
+To verify the content in this distribution, first make sure you have
+Module::Signature installed, then type:
+
+    % cpansign -v
+
+It would check each file's integrity, as well as the signature's
+validity.  If "==> Signature verified OK! <==" is not displayed,
+the distribution may already have been compromised, and you should
+not run its Makefile.PL or Build.PL.
+
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+SHA1 21e231058dc14e1edf68055b5d0d555482de7519 Basic.pm
+SHA1 28bc34b7612342c5ff88beded3a1a658a507192f Basic/CoVariance.pm
+SHA1 9d6149547a4d9fde57adfe0f8603c21b7c64f1a6 Basic/Correlation.pm
+SHA1 c5258568f28b04ea54b23d1c87f92022b1b61bee Basic/LeastSquareFit.pm
+SHA1 9d02a6917df6a26e16e80b48ab60c4c6933140c2 Basic/Mean.pm
+SHA1 bf0fc396cd7714270d2f37e412a5bef8771c2ddc Basic/StdDev.pm
+SHA1 7e47dc26d7a04350c7acb49ebce41179322416fa Basic/Variance.pm
+SHA1 6ef0bf13553f9ad8c38f0eff55c9982c970a886d Basic/Vector.pm
+SHA1 318b1795a22bab0e26aaedb234b09bc5b0469e9d Changes
+SHA1 b63ccbb7b635400a7b8da2c20a2ddf5ebb0b0628 MANIFEST
+SHA1 fa63ae8af3764760b926928be4aa72ea1a1f5b5d Makefile.PL
+SHA1 91c33c888937dbaf45884af1aa2e24c847523599 t/00_signature.t
+SHA1 e24372c6414cd9ea2802376e17f4317301fdb271 t/05_load_them.t
+SHA1 192104afc9d5d83f464a7520eaf6ad9d911ce5ae t/07_vector.t
+SHA1 01f7eeda717468b85e4b22e6ea25eef252091aed t/10_mean.t
+SHA1 8372c016d4cf35cc8cee141420ce59e3a1136948 t/15_covariance.t
+SHA1 286448d8b6042c5efcd58de5980a38ebefaf377c t/15_variance.t
+SHA1 c3d88b1b6c3a696d3b101087aa8d4f6d34289620 t/20_LSF.t
+SHA1 97e1a975f144ed355a35b563fa7e98e19dac5f94 t/20_correlation.t
+SHA1 7d7922c443ef20bac5ebfdddc74eba6b7abe5936 t/20_stddev.t
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.2.2 (GNU/Linux)
+
+iD8DBQE/0gVr5OVNEZoM2pkRAmbKAJ4w7INsx0N0E6dBfcOvpTcr42WliACeKogR
+CQuyleoxKegyhDJ8OLgzJEw=
+=hEsy
+-----END PGP SIGNATURE-----
