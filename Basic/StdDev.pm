@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: StdDev.pm,v 1.6 2003/12/02 22:03:59 jettero Exp $ 
+# $Id: StdDev.pm,v 1.7 2004/01/29 16:17:20 jettero Exp $ 
 
 package Statistics::Basic::StdDev;
 
@@ -102,6 +102,15 @@ __END__
 =head1 SYNOPSIS
 
     A machine to calculate the standard deviation of a given vector.
+
+=head1 ENV VARIABLES
+
+=head2 DEBUG
+
+   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+
+   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+   enable debugging dynamically.
 
 =head1 AUTHOR
 

@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Variance.pm,v 1.10 2003/12/09 01:58:09 jettero Exp $ 
+# $Id: Variance.pm,v 1.11 2004/01/29 16:17:20 jettero Exp $ 
 
 package Statistics::Basic::Variance;
 
@@ -44,6 +44,8 @@ sub recalc {
     my $sum         = 0;
     my $cardinality = $this->{v}->size;
     my $mean        = $this->{m}->query;
+
+    $cardinality -- if $ENV{UNBIAS};
 
     unless( $cardinality > 0 ) {
         $this->{variance} = undef;
@@ -131,6 +133,24 @@ __END__
 =head1 SYNOPSIS
 
     A machine to calculate the variance of a given vector.
+
+=head1 ENV VARIABLES
+
+=head2 DEBUG
+
+   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+
+   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+   enable debugging dynamically.
+
+=head2 UNBIAS
+
+   This module uses the sum(X - mean(X))/N definition of variance.
+   If you wish to use the unbiased, sum(X-mean(X)/(N-1) definition, then 
+   set the $ENV{UNBIAS}=1;
+
+   # And if you thought that was useful, then give a shout out to:
+   # Robert McGehee <xxxxxxxx@wso.williams.edu>, for he requested it.
 
 =head1 AUTHOR
 

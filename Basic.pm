@@ -1,12 +1,12 @@
 # vi:fdm=marker fdl=0
-# $Id: Basic.pm,v 1.16 2003/12/12 12:18:18 jettero Exp $ 
+# $Id: Basic.pm,v 1.18 2004/01/29 16:23:23 jettero Exp $ 
 
 package Statisics::Basic;
 
 use strict;
 use Carp;
 
-our $VERSION = "0.39";
+our $VERSION = "0.40";
 
 1;
 
@@ -77,6 +77,24 @@ __END__
     difficult to think of everything.
 
     If you spot any bugs, please tell me.
+
+=head1 ENV VARIABLES
+
+=head2 DEBUG
+
+   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+
+   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+   enable debugging dynamically.
+
+=head2 UNBIAS
+
+   This module uses the sum(X - mean(X))/N definition of variance.
+   If you wish to use the unbiased, sum(X-mean(X)/(N-1) definition, then 
+   set the $ENV{UNBIAS}=1;
+
+   # And if you thought that was useful, then give a shout out to:
+   # Robert McGehee <xxxxxxxx@wso.williams.edu>, for he requested it.
 
 =head1 AUTHOR
 

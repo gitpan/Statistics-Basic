@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Vector.pm,v 1.8 2003/12/09 13:34:42 jettero Exp $ 
+# $Id: Vector.pm,v 1.9 2004/01/29 16:17:20 jettero Exp $ 
 
 package Statistics::Basic::Vector;
 
@@ -148,6 +148,15 @@ __END__
 =head1 SYNOPSIS
 
     A machine to calculate the mean of a given vector.
+
+=head1 ENV VARIABLES
+
+=head2 DEBUG
+
+   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+
+   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+   enable debugging dynamically.
 
 =head1 AUTHOR
 

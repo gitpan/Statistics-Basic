@@ -1,3 +1,8 @@
+0.4:  Thu Jan 29 11:20:51 EST 2004
+   - jettero added the UNBIAS flag for those that wish to
+     use (N-1) in their variance. Perhaps I should switch
+     the default. We will see.
+
 0.39:  Fri Dec 12 07:18:18 EST 2003
    - jettero changed the NAME field to match CPAN
 

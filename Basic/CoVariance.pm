@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: CoVariance.pm,v 1.9 2003/12/09 01:58:09 jettero Exp $ 
+# $Id: CoVariance.pm,v 1.10 2004/01/29 16:17:20 jettero Exp $ 
 
 package Statistics::Basic::CoVariance;
 
@@ -56,6 +56,8 @@ sub recalc {
     croak "the two vectors in a CoVariance object must be the same length" unless $c2 == $c1;
 
     my $cardinality = $c1;
+
+    $cardinality -- if $ENV{UNBIAS};
 
     unless( $cardinality > 0 ) {
         warn "[recalc covariance] cardinality found to be 0-ish\n" if $ENV{DEBUG};
@@ -179,6 +181,24 @@ __END__
 =head1 SYNOPSIS
 
     A machine to calculate the covariance of given vectors.
+
+=head1 ENV VARIABLES
+
+=head2 DEBUG
+
+   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+
+   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+   enable debugging dynamically.
+
+=head2 UNBIAS
+
+   This module uses the sum(X - mean(X))/N definition of variance.
+   If you wish to use the unbiased, sum(X-mean(X)/(N-1) definition, then 
+   set the $ENV{UNBIAS}=1;
+
+   # And if you thought that was useful, then give a shout out to:
+   # Robert McGehee <xxxxxxxx@wso.williams.edu>, for he requested it.
 
 =head1 AUTHOR
 

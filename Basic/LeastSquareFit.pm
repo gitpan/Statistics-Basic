@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: LeastSquareFit.pm,v 1.4 2003/12/09 13:34:42 jettero Exp $ 
+# $Id: LeastSquareFit.pm,v 1.5 2004/01/29 16:17:20 jettero Exp $ 
 
 package Statistics::Basic::LeastSquareFit;
 
@@ -151,6 +151,15 @@ __END__
     The module returns alpha and beta from the formula:
 
     y = alpha + beta * x
+
+=head1 ENV VARIABLES
+
+=head2 DEBUG
+
+   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+
+   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+   enable debugging dynamically.
 
 =head1 AUTHOR
 
