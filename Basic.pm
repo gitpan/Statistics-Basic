@@ -1,12 +1,12 @@
 # vi:fdm=marker fdl=0
-# $Id: Basic.pm,v 1.19 2004/01/30 13:54:37 jettero Exp $ 
+# $Id: Basic.pm,v 1.21 2004/03/23 12:14:11 jettero Exp $ 
 
 package Statistics::Basic;
 
 use strict;
 use Carp;
 
-our $VERSION = "0.41";
+our $VERSION = "0.41.1";
 
 1;
 
@@ -101,6 +101,10 @@ __END__
     Please contact me with ANY suggestions, no matter how pedantic.
 
     Jettero Heller <japh@voltar-confed.org>
+
+=head1 COPYRIGHT
+
+    GPL!!  I included a gpl.txt for your reading enjoyment.
 
 =head1 SEE ALSO
 
