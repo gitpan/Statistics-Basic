@@ -1,9 +1,10 @@
 # vi:fdm=marker fdl=0
-# $Id: Vector.pm,v 1.9 2004/01/29 16:17:20 jettero Exp $ 
+# $Id: Vector.pm,v 1.10 2004/03/23 13:01:42 jettero Exp $ 
 
 package Statistics::Basic::Vector;
 
 use strict;
+no warnings;
 use Carp;
 
 1;

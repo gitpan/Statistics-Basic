@@ -1,9 +1,10 @@
 # vi:fdm=marker fdl=0
-# $Id: LeastSquareFit.pm,v 1.5 2004/01/29 16:17:20 jettero Exp $ 
+# $Id: LeastSquareFit.pm,v 1.6 2004/03/23 13:01:42 jettero Exp $ 
 
 package Statistics::Basic::LeastSquareFit;
 
 use strict;
+no warnings;
 use Carp;
 use Statistics::Basic::Vector;
 use Statistics::Basic::Variance;

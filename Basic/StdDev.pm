@@ -1,9 +1,10 @@
 # vi:fdm=marker fdl=0
-# $Id: StdDev.pm,v 1.7 2004/01/29 16:17:20 jettero Exp $ 
+# $Id: StdDev.pm,v 1.8 2004/03/23 13:01:42 jettero Exp $ 
 
 package Statistics::Basic::StdDev;
 
 use strict;
+no warnings;
 use Carp;
 use Statistics::Basic::Variance;
 

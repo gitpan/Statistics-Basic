@@ -1,9 +1,10 @@
 # vi:fdm=marker fdl=0
-# $Id: Variance.pm,v 1.11 2004/01/29 16:17:20 jettero Exp $ 
+# $Id: Variance.pm,v 1.12 2004/03/23 13:01:42 jettero Exp $ 
 
 package Statistics::Basic::Variance;
 
 use strict;
+no warnings;
 use Carp;
 use Statistics::Basic::Mean;
 use Statistics::Basic::Vector;

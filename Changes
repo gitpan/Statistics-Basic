@@ -1,3 +1,6 @@
+0.41.1 and 0.41.2: Tue Mar 23 07:59:46 EST 2004
+   - Copyright clarifications.  ... GPL with a twist.
+
 0.41:  Fri Jan 30 08:54:37 EST 2004
    - jettero found an amazingly STUPID typo in the Basic.pm
      Statisics anyone?

@@ -1,9 +1,10 @@
 # vi:fdm=marker fdl=0
-# $Id: Mean.pm,v 1.15 2004/01/29 16:17:20 jettero Exp $ 
+# $Id: Mean.pm,v 1.16 2004/03/23 13:01:42 jettero Exp $ 
 
 package Statistics::Basic::Mean;
 
 use strict;
+no warnings;
 use Carp;
 
 use Statistics::Basic::Vector;

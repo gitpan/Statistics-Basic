@@ -1,12 +1,13 @@
 # vi:fdm=marker fdl=0
-# $Id: Basic.pm,v 1.21 2004/03/23 12:14:11 jettero Exp $ 
+# $Id: Basic.pm,v 1.23 2004/03/23 13:01:42 jettero Exp $ 
 
 package Statistics::Basic;
 
 use strict;
+no warnings;
 use Carp;
 
-our $VERSION = "0.41.1";
+our $VERSION = "0.41.2";
 
 1;
 
@@ -104,7 +105,19 @@ __END__
 
 =head1 COPYRIGHT
 
-    GPL!!  I included a gpl.txt for your reading enjoyment.
+    GPL!  I included a gpl.txt for your reading enjoyment.
+
+    Though, additionally, I will say that I'll be tickled if you were to
+    include this package in any commercial endeavor.  Also, any thoughts to
+    the effect that using this module will somehow make your commercial
+    package GPL should be washed away.
+
+    I hereby release you from any such silly conditions.
+
+    This package and any modifications you make to it must remain GPL.  Any
+    programs you (or your company) write shall remain yours (and under
+    whatever copyright you choose) even if you use this package's intended
+    and/or exported interfaces in them.
 
 =head1 SEE ALSO
 
