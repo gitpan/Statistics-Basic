@@ -1,3 +1,6 @@
+0.39:  Fri Dec 12 07:18:18 EST 2003
+   - jettero changed the NAME field to match CPAN
+
 0.38:  Tue Dec  9 08:35:59 EST 2003
    - jettero discovered many bugs in the insert/ginsert of
      the new new()s

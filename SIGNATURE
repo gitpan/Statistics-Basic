@@ -14,7 +14,7 @@ not run its Makefile.PL or Build.PL.
 -----BEGIN PGP SIGNED MESSAGE-----
 Hash: SHA1
 
-SHA1 485126b871ce697d6cc61cbff7dff1b324bd038f Basic.pm
+SHA1 3e242356e2c25af08e1e5659b377c1fa25718d83 Basic.pm
 SHA1 5940536d97ee05b119c6b98c814c77c6f88bb780 Basic/CoVariance.pm
 SHA1 423d2e122adabf181fb9c900203076c7539ecc0b Basic/Correlation.pm
 SHA1 e7f67d53cb0587ef0d54907f482639ac434a2390 Basic/LeastSquareFit.pm
@@ -22,7 +22,7 @@ SHA1 6a8cd99cb3d403096d3fb0f06cf3aeef71ceb647 Basic/Mean.pm
 SHA1 bf0fc396cd7714270d2f37e412a5bef8771c2ddc Basic/StdDev.pm
 SHA1 e2a65431a962c1f0975f9daeabb69ccff835ea05 Basic/Variance.pm
 SHA1 7fc7cbd7a1d83cfdb4289594c6cdea1fdbf82eba Basic/Vector.pm
-SHA1 6cb39acfb1b01ebfc4a7ab75bd4a74961702eea3 Changes
+SHA1 bbe86d68c487f946c8923542611652794a8ee735 Changes
 SHA1 b63ccbb7b635400a7b8da2c20a2ddf5ebb0b0628 MANIFEST
 SHA1 fa63ae8af3764760b926928be4aa72ea1a1f5b5d Makefile.PL
 SHA1 91c33c888937dbaf45884af1aa2e24c847523599 t/00_signature.t
@@ -37,7 +37,7 @@ SHA1 55df42cd7ac44b6a42159d92bb82717339069b2d t/20_stddev.t
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.2.2 (GNU/Linux)
 
-iD8DBQE/1deC5OVNEZoM2pkRAkxVAJ9NRIuNj5lrrbnFIyhDvGPU+y4ELwCfRz7M
-C/siPDro6mwNgfjq9n0j5s8=
-=5b+r
+iD8DBQE/2bIO5OVNEZoM2pkRAt0+AJ0aydhnn7gKhe7BhZT2NkQikUY8VQCgj69C
+k93aQNlm990yDfrUp5dcigM=
+=94Fo
 -----END PGP SIGNATURE-----

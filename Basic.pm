@@ -1,12 +1,12 @@
 # vi:fdm=marker fdl=0
-# $Id: Basic.pm,v 1.14 2003/12/09 13:35:59 jettero Exp $ 
+# $Id: Basic.pm,v 1.16 2003/12/12 12:18:18 jettero Exp $ 
 
 package Statisics::Basic;
 
 use strict;
 use Carp;
 
-our $VERSION = "0.38";
+our $VERSION = "0.39";
 
 1;
 
@@ -15,11 +15,9 @@ __END__
 
 =head1 NAME
 
-    Basic Statistics
+    Statistics::Basic A collection of very basic statistics formulae for vectors.
 
 =head1 SYNOPSIS
-    
-    A collection of very basic statistics formulae for vectors.
 
     # for use with one vector:
     Statistics::Basic::Mean;
