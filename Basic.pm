@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Basic.pm,v 1.23 2004/03/23 13:01:42 jettero Exp $ 
+# $Id: Basic.pm,v 1.24 2004/03/25 17:48:56 jettero Exp $ 
 
 package Statistics::Basic;
 
@@ -7,7 +7,7 @@ use strict;
 no warnings;
 use Carp;
 
-our $VERSION = "0.41.2";
+our $VERSION = "0.41.3";
 
 1;
 

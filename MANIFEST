@@ -1,6 +1,5 @@
 MANIFEST
 Basic.pm
-t/00_signature.t
 t/05_load_them.t
 t/07_vector.t
 t/10_mean.t
@@ -18,5 +17,5 @@ Basic/StdDev.pm
 Basic/CoVariance.pm
 Basic/Correlation.pm
 Basic/LeastSquareFit.pm
-SIGNATURE
 gpl.txt
+META.yml                                 Module meta-data (added by MakeMaker)
