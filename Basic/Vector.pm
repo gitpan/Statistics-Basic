@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Vector.pm,v 1.6 2003/12/02 21:31:02 jettero Exp $ 
+# $Id: Vector.pm,v 1.8 2003/12/09 13:34:42 jettero Exp $ 
 
 package Statistics::Basic::Vector;
 
@@ -65,6 +65,8 @@ sub set_size {
 sub size {
     my $this = shift;
 
+    return undef unless ref($this->{v});
+
     return int(@{ $this->{v} });
 }
 # }}}
@@ -95,8 +97,6 @@ sub insert {
 sub ginsert {
     my $this = shift;
 
-    croak "you must define a vector size before using insert()" unless defined $this->{s};
-
     for my $e (@_) {
         if( ref($e) ) {
             if( ref($e) eq "ARRAY" ) {
@@ -126,15 +126,15 @@ sub set_vector {
     } elsif( ref($vector) eq "Statistics::Basic::Vector") {
         $this->{s} = $vector->{s};
         $this->{v} = $vector->{v}; # this is really a clone I'd say ...
-    } else {
-        croak "argument to set_vector() must be an arrayref or Statistics::Basic::Vector";
+    } elsif( defined $vector ) {
+        croak "argument to set_vector() too strange";
     }
 
     if( defined $set_size ) {
         $this->set_size( $set_size );
     }
 
-    warn "[set_vector vector] [@{ $this->{v} }]\n" if $ENV{DEBUG} >= 2;
+    warn "[set_vector vector] [@{ $this->{v} }]\n" if $ENV{DEBUG} >= 2 and ref($this->{v});
 }
 # }}}
 

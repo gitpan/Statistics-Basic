@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Mean.pm,v 1.13 2003/12/02 22:03:59 jettero Exp $ 
+# $Id: Mean.pm,v 1.14 2003/12/09 01:58:09 jettero Exp $ 
 
 package Statistics::Basic::Mean;
 
@@ -25,8 +25,10 @@ sub new {
     } elsif( ref($vector) eq "Statistics::Basic::Vector" ) {
         $this->{v} = $vector;
         $this->{v}->set_size( $set_size ) if defined $set_size;
+    } elsif( defined($vector) ) {
+        croak "argument to new() too strange";
     } else {
-        croak "argument to new() must be an arrayref or Statistics::Basic::Vector";
+        $this->{v} = new Statistics::Basic::Vector;
     }
 
     $this->recalc;
@@ -37,7 +39,7 @@ sub new {
 # recalc {{{
 sub recalc {
     my $this        = shift;
-    my $sum         = 0;
+    my $sum         = 0; 
     my $cardinality = $this->{v}->size;
 
     unless( $cardinality > 0 ) {

@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Correlation.pm,v 1.7 2003/12/06 16:24:24 jettero Exp $ 
+# $Id: Correlation.pm,v 1.9 2003/12/09 13:34:42 jettero Exp $ 
 
 package Statistics::Basic::Correlation;
 
@@ -21,7 +21,7 @@ sub new {
 
     $this->{sd1} = new Statistics::Basic::StdDev($v1);
     $this->{sd2} = new Statistics::Basic::StdDev($v2);
-    $this->{cov} = new Statistics::Basic::CoVariance($v1, $v2, undef, $this->{sd1}{v}{m}, $this->{sd2}{v}{m});
+    $this->{cov} = new Statistics::Basic::CoVariance( $v1, $v2, undef, $this->{sd1}{v}{m}, $this->{sd2}{v}{m});
 
     $this->recalc;
 
@@ -37,7 +37,7 @@ sub recalc {
     my $s2 = $this->{sd2}->query;
 
     if( $s1 == 0 or $s2 == 0 ) {
-        carp "Standard deviation of 0.  Crazy infinite correlation detected.";
+        warn "[recalc correlation] Standard deviation of 0.  Crazy infinite correlation detected.\n" if $ENV{DEBUG};
 
         return undef;
     }

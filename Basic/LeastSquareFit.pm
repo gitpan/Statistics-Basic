@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: LeastSquareFit.pm,v 1.2 2003/12/06 16:32:02 jettero Exp $ 
+# $Id: LeastSquareFit.pm,v 1.4 2003/12/09 13:34:42 jettero Exp $ 
 
 package Statistics::Basic::LeastSquareFit;
 
@@ -33,6 +33,16 @@ sub new {
 # recalc {{{
 sub recalc {
     my $this  = shift;
+
+    unless( $this->{vrx}->query ) {
+        unless( defined $this->{vrx}->query ) {
+            warn "[recalc LSF] undef variance...\n" if $ENV{DEBUG};
+        } else {
+            warn "[recalc LSF] narrowly avoided division by zero.  Something is probably wrong.\n" if $ENV{DEBUG};
+        }
+
+        return undef;
+    }
 
     $this->{beta}  = ($this->{cov}->query / $this->{vrx}->query);
     $this->{alpha} = ($this->{mny}->query - ($this->{beta} * $this->{mnx}->query));

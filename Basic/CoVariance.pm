@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: CoVariance.pm,v 1.8 2003/12/02 22:17:28 jettero Exp $ 
+# $Id: CoVariance.pm,v 1.9 2003/12/09 01:58:09 jettero Exp $ 
 
 package Statistics::Basic::CoVariance;
 
@@ -29,8 +29,10 @@ sub new {
         } elsif( ref($v[$i]) eq "Statistics::Basic::Vector" ) {
             $this->{"v$x"} = $v[$i];
             $this->{"v$x"}->set_size( $set_size ) if defined $set_size;
-        } else {
+        } elsif(defined($v[$i])) {
             croak "argument to new() must be an arrayref or Statistics::Basic::Vector";
+        } else {
+            $this->{"v$x"} = new Statistics::Basic::Vector;
         }
 
         $this->{"m$x"} = (ref($m[$i]) eq "Statistics::Basic::Mean" ? 
@@ -56,7 +58,8 @@ sub recalc {
     my $cardinality = $c1;
 
     unless( $cardinality > 0 ) {
-        warn "[recalc covariance] cardinality found to be 0-ish\n";
+        warn "[recalc covariance] cardinality found to be 0-ish\n" if $ENV{DEBUG};
+
         $this->{covariance} = undef;
 
         return;

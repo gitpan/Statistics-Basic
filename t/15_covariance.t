@@ -1,11 +1,11 @@
 # vi:fdm=marker fdl=0 syntax=perl:
-# $Id: 15_covariance.t,v 1.3 2003/12/02 21:43:35 jettero Exp $
+# $Id: 15_covariance.t,v 1.4 2003/12/08 20:34:28 jettero Exp $
 
 use strict;
 use Test;
 use Statistics::Basic::CoVariance;
 
-plan tests => 6;
+plan tests => 7;
 
 my  $cov = new Statistics::Basic::CoVariance([1..3], [1..3]);
 
@@ -25,3 +25,8 @@ ok( $cov->query == (1/4) );
 
     $cov->ginsert( [13, 0], [13, 0] );
 ok( $cov->query == (105/4) );
+
+
+my  $j = new Statistics::Basic::CoVariance;
+    $j->set_vector([1..3], [1..3]);
+ok( $j->query == (2/3) );

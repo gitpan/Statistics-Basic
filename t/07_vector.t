@@ -1,11 +1,11 @@
 # vi:fdm=marker fdl=0 syntax=perl:
-# $Id: 07_vector.t,v 1.1 2003/12/02 16:21:54 jettero Exp $
+# $Id: 07_vector.t,v 1.3 2003/12/09 01:58:09 jettero Exp $
 
 use strict;
 use Test;
 use Statistics::Basic::Vector;
 
-plan tests => 5;
+plan tests => 7;
 
 my $normalize    = undef;
 my $no_normalize = 1;
@@ -25,3 +25,8 @@ ok( $v->size == 5 ); # and of course, by normalizer, we mean 0-padder
 
     $v->insert( [10..13], 14..15 );
 ok( $v->size == 5 );
+
+my  $j = new Statistics::Basic::Vector;
+ok( not defined $j->size );
+    $j->set_vector([7,9,21]);
+ok( $j->size == 3 );

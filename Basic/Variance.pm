@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Variance.pm,v 1.9 2003/12/02 22:03:59 jettero Exp $ 
+# $Id: Variance.pm,v 1.10 2003/12/09 01:58:09 jettero Exp $ 
 
 package Statistics::Basic::Variance;
 
@@ -25,8 +25,10 @@ sub new {
     } elsif( ref($vector) eq "Statistics::Basic::Vector" ) {
         $this->{v} = $vector;
         $this->{v}->set_size( $set_size ) if defined $set_size;
+    } elsif( defined($vector) ) {
+        croak "argument to new() too strange";
     } else {
-        croak "argument to new() must be an arrayref or Statistics::Basic::Vector";
+        $this->{v} = new Statistics::Basic::Vector;
     }
 
     $this->{m} = new Statistics::Basic::Mean($this->{v});
