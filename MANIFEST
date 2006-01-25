@@ -12,6 +12,8 @@ Makefile.PL
 Changes
 Basic/Vector.pm
 Basic/Mean.pm
+Basic/Median.pm
+Basic/Mode.pm
 Basic/Variance.pm
 Basic/StdDev.pm
 Basic/CoVariance.pm
@@ -19,3 +21,5 @@ Basic/Correlation.pm
 Basic/LeastSquareFit.pm
 gpl.txt
 META.yml                                 Module meta-data (added by MakeMaker)
+t/10_median.t
+t/10_mode.t

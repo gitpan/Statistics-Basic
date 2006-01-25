@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Vector.pm,v 1.10 2004/03/23 13:01:42 jettero Exp $ 
+# $Id: Vector.pm,v 1.1 2006/01/25 22:20:42 jettero Exp $ 
 
 package Statistics::Basic::Vector;
 
@@ -124,9 +124,11 @@ sub set_vector {
     if( ref($vector) eq "ARRAY" ) {
         $this->{v} = $vector;
         $this->{s} = int @$vector;
+
     } elsif( ref($vector) eq "Statistics::Basic::Vector") {
         $this->{s} = $vector->{s};
         $this->{v} = $vector->{v}; # this is really a clone I'd say ...
+
     } elsif( defined $vector ) {
         croak "argument to set_vector() too strange";
     }
@@ -148,25 +150,25 @@ __END__
 
 =head1 SYNOPSIS
 
-    A machine to calculate the mean of a given vector.
+A machine to calculate the mean of a given vector.
 
 =head1 ENV VARIABLES
 
 =head2 DEBUG
 
-   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
 
-   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
-   enable debugging dynamically.
+Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+enable debugging dynamically.
 
 =head1 AUTHOR
 
-    Please contact me with ANY suggestions, no matter how pedantic.
+Please contact me with ANY suggestions, no matter how pedantic.
 
-    Jettero Heller <japh@voltar-confed.org>
+Jettero Heller <japh@voltar-confed.org>
 
 =head1 SEE ALSO
 
-    perl(1)
+perl(1)
 
 =cut

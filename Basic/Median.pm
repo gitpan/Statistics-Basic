@@ -1,7 +1,7 @@
 # vi:fdm=marker fdl=0
-# $Id: Mean.pm,v 1.1 2006/01/25 22:20:42 jettero Exp $ 
+# $Id: Median.pm,v 1.1 2006/01/25 22:20:42 jettero Exp $ 
 
-package Statistics::Basic::Mean;
+package Statistics::Basic::Median;
 
 use strict;
 no warnings;
@@ -17,7 +17,7 @@ sub new {
     my $vector   = shift;
     my $set_size = shift;
 
-    warn "[new mean]\n" if $ENV{DEBUG} >= 2;
+    warn "[new median]\n" if $ENV{DEBUG} >= 2;
 
     $this = bless {}, $this;
 
@@ -40,27 +40,30 @@ sub new {
 # recalc {{{
 sub recalc {
     my $this        = shift;
-    my $sum         = 0; 
     my $cardinality = $this->{v}->size;
 
     unless( $cardinality > 0 ) {
-        $this->{mean} = undef;
+        $this->{median} = undef;
 
         return;
     }
 
-    $sum += $_ for $this->{v}->query;
+    my @v = (sort {$a <=> $b} ($this->{'v'}->query()));
+    my $center = int($cardinality/2);
+    if ($cardinality%2) {
+      $this->{'median'} = $v[$center];
+    } else {
+      $this->{'median'} = ($v[$center] + $v[$center-1]) / 2.0;
+    }
 
-    $this->{mean} = ($sum / $cardinality);
-
-    warn "[recalc mean] ($sum/$cardinality) = $this->{mean}\n" if $ENV{DEBUG};
+    warn "[recalc median] vector[int($cardinality/2)] = $this->{median}\n" if $ENV{DEBUG};
 }
 # }}}
 # query {{{
 sub query {
     my $this = shift;
 
-    return $this->{mean};
+    return $this->{'median'};
 }
 # }}}
 
@@ -76,7 +79,7 @@ sub set_size {
     my $this = shift;
     my $size = shift;
 
-    warn "[set_size mean] $size\n" if $ENV{DEBUG};
+    warn "[set_size median] $size\n" if $ENV{DEBUG};
     croak "strange size" if $size < 1;
 
     $this->{v}->set_size($size);
@@ -87,7 +90,7 @@ sub set_size {
 sub set_vector {
     my $this = shift;
 
-    warn "[set_vector mean]\n" if $ENV{DEBUG};
+    warn "[set_vector median]\n" if $ENV{DEBUG};
 
     $this->{v}->set_vector(@_);
     $this->recalc;
@@ -97,7 +100,7 @@ sub set_vector {
 sub insert {
     my $this = shift;
 
-    warn "[insert mean]\n" if $ENV{DEBUG};
+    warn "[insert median]\n" if $ENV{DEBUG};
 
     $this->{v}->insert(@_);
     $this->recalc;
@@ -107,7 +110,7 @@ sub insert {
 sub ginsert {
     my $this = shift;
 
-    warn "[ginsert mean]\n" if $ENV{DEBUG};
+    warn "[ginsert median]\n" if $ENV{DEBUG};
 
     $this->{v}->ginsert(@_);
     $this->recalc;
@@ -119,29 +122,35 @@ __END__
 
 =head1 NAME
 
-    Statistics::Basic::Mean
+    Statistics::Basic::Median
 
 =head1 SYNOPSIS
 
-A machine to calculate the mean of a given vector.
+    A machine to calculate the median of a given vector.
 
 =head1 ENV VARIABLES
 
 =head2 DEBUG
 
-Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
 
-Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
-enable debugging dynamically.
+   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+   enable debugging dynamically.
 
 =head1 AUTHOR
 
-Please contact me with ANY suggestions, no matter how pedantic.
+    Please contact me with ANY suggestions, no matter how pedantic.
 
-Jettero Heller <japh@voltar-confed.org>
+    Jettero Heller <japh@voltar-confed.org>
+
+=head1 SUB-MODULE AUTHOR
+
+    The author of this module and it's tests was actually:
+
+    http://search.cpan.org/~orien/
 
 =head1 SEE ALSO
 
-perl(1)
+    perl(1)
 
 =cut

@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0
-# $Id: Basic.pm,v 1.24 2004/03/25 17:48:56 jettero Exp $ 
+# $Id: Basic.pm,v 1.3 2006/01/25 22:23:29 jettero Exp $ 
 
 package Statistics::Basic;
 
@@ -7,7 +7,7 @@ use strict;
 no warnings;
 use Carp;
 
-our $VERSION = "0.41.3";
+our $VERSION = "0.42";
 
 1;
 
@@ -22,6 +22,8 @@ __END__
 
     # for use with one vector:
     Statistics::Basic::Mean;
+    Statistics::Basic::Median;
+    Statistics::Basic::Mode;
     Statistics::Basic::Variance;
     Statistics::Basic::StdDev;
 
@@ -73,57 +75,61 @@ __END__
 
 =head1 BUGS
 
-    Besides the lack of documentation?  Well, I'm sure there's a bunch.
-    I've tried to come up with a comprehensive suite of tests, but it's
-    difficult to think of everything.
+Besides the lack of documentation?  Well, I'm sure there's a bunch.
+I've tried to come up with a comprehensive suite of tests, but it's
+difficult to think of everything.
 
-    If you spot any bugs, please tell me.
+If you spot any bugs, please tell me.
 
 =head1 ENV VARIABLES
 
 =head2 DEBUG
 
-   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
+Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
 
-   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
-   enable debugging dynamically.
+Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
+enable debugging dynamically.
 
 =head2 UNBIAS
 
-   This module uses the sum(X - mean(X))/N definition of variance.
-   If you wish to use the unbiased, sum(X-mean(X)/(N-1) definition, then 
-   set the $ENV{UNBIAS}=1;
+This module uses the sum(X - mean(X))/N definition of variance.
+If you wish to use the unbiased, sum(X-mean(X)/(N-1) definition, then 
+set the $ENV{UNBIAS}=1;
 
-   # And if you thought that was useful, then give a shout out to:
-   # Robert McGehee <xxxxxxxx@wso.williams.edu>, for he requested it.
+# And if you thought that was useful, then give a shout out to:
+# Robert McGehee <xxxxxxxx@wso.williams.edu>, for he requested it.
 
 =head1 AUTHOR
 
-    Please contact me with ANY suggestions, no matter how pedantic.
+Please contact me with ANY suggestions, no matter how pedantic.
 
-    Jettero Heller <japh@voltar-confed.org>
+Jettero Heller <japh@voltar-confed.org>
+
+=head1 CONTRIBS
+
+http://search.cpan.org/~orien/  (some modules and tests)
 
 =head1 COPYRIGHT
 
-    GPL!  I included a gpl.txt for your reading enjoyment.
+GPL!  I included a gpl.txt for your reading enjoyment.
 
-    Though, additionally, I will say that I'll be tickled if you were to
-    include this package in any commercial endeavor.  Also, any thoughts to
-    the effect that using this module will somehow make your commercial
-    package GPL should be washed away.
+Though, additionally, I will say that I'll be tickled if you were to
+include this package in any commercial endeavor.  Also, any thoughts to
+the effect that using this module will somehow make your commercial
+package GPL should be washed away.
 
-    I hereby release you from any such silly conditions.
+I hereby release you from any such silly conditions.
 
-    This package and any modifications you make to it must remain GPL.  Any
-    programs you (or your company) write shall remain yours (and under
-    whatever copyright you choose) even if you use this package's intended
-    and/or exported interfaces in them.
+This package and any modifications you make to it must remain GPL.  Any
+programs you (or your company) write shall remain yours (and under
+whatever copyright you choose) even if you use this package's intended
+and/or exported interfaces in them.
 
 =head1 SEE ALSO
 
-    Most of the documentation is very thin.  Sorry.  The modules with their
-    own documentation (no matter how thin) are listed below.
+Most of the documentation is very thin.  Sorry.  The modules with their
+own documentation (no matter how thin) are listed below.
 
-    Statistics::Basic::LeastSquareFit
+Statistics::Basic::LeastSquareFit
 
 =cut

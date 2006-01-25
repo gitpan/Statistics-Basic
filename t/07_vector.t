@@ -1,5 +1,5 @@
 # vi:fdm=marker fdl=0 syntax=perl:
-# $Id: 07_vector.t,v 1.3 2003/12/09 01:58:09 jettero Exp $
+# $Id: 07_vector.t,v 1.1 2006/01/25 22:20:42 jettero Exp $
 
 use strict;
 use Test;
