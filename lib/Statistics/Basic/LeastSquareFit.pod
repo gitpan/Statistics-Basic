@@ -1,0 +1,68 @@
+=head1 NAME
+
+Statistics::Basic::LeastSquareFit - find the least square fit for two arrays
+
+=head1 SYNOPSIS
+
+A machine to calculate the Least Square Fit of given vectors x and y.
+
+The module returns the alpha and beta that best fits this formula:
+
+    $y = $beta * $x + $alpha
+
+Invoke it this way:
+
+    my $lsf = leastsquarefit( [1,2,3], [1,2,3] );
+
+Or this way:
+
+    my $v1  = vector(1,2,3);
+    my $v2  = vector(1,2,3);
+    my $lsf = lsf($v1,$v2);
+
+And then either query the values or print them like so:
+
+    print "The LSF for $v1 and $v2: $lsf\n";
+    my ($alpha, $beta) = $lsf->query;
+
+LSF is meant for finding a line of best fit.  C<$beta> is the slope of the line
+and C<$alpha> is the y-offset.  Suppose you want to draw the line.  Use these to
+calculate the C<x> for a given C<y> or vice versa:
+
+    my $y = $lsf->y_given_x( 7 );
+    my $x = $lsf->x_given_y( 7 );
+
+(Note that C<x_given_y()> can sometimes produce a divide-by-zero error since it
+has to divide by the C<$beta>.)
+
+Create a 20 point "moving" LSF like so:
+
+    my $sth = $dbh->prepare("select col1,col2 from data where something");
+    my $len = 20;
+    my $lsf = lsf();
+       $lsf->set_size($len);
+
+    $sth->execute or die $dbh->errstr;
+    $sth->bind_columns( my ($lhs, $rhs) ) or die $dbh->errstr;
+
+    my $count = $len;
+    while( $sth->fetch ) {
+
+        $lsf->insert( $lhs, $rhs );
+        if( -- $count <= 0 ) {
+            print "LSF: $lsf\n";
+        }
+    }
+
+The full details are probably in the base module.  If you have questions, just
+let me know.
+
+=head1 AUTHOR
+
+Paul Miller <jettero@cpan.org>
+
+=head1 SEE ALSO
+
+perl(1), L<Statistics::Basic>
+
+=cut

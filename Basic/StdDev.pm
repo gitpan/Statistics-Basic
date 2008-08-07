@@ -1,24 +1,31 @@
-# vi:fdm=marker fdl=0
-# $Id: StdDev.pm,v 1.1 2006/01/25 22:20:42 jettero Exp $ 
 
 package Statistics::Basic::StdDev;
 
 use strict;
-no warnings;
+use warnings;
 use Carp;
-use Statistics::Basic::Variance;
+
+use Statistics::Basic;
+
+use overload
+    '""' => sub { $Statistics::Basic::fmt->format_number($_[0]->query, $ENV{IPRES}) },
+    '0+' => sub { $_[0]->query },
+    fallback => 1; # tries to do what it would have done if this wasn't present.
 
 1;
 
 # new {{{
 sub new {
-    my $this   = shift;
-    my $vector = shift;
-    my $size   = shift;
+    my $class = shift;
 
-    $this = bless { v => Statistics::Basic::Variance->new( $vector, $size ) }, $this;
+    warn "[new stddev]\n" if $ENV{DEBUG} >= 2;
 
-    $this->recalc;
+    my $this     = bless {}, $class;
+    my $variance = $this->{V} = eval { Statistics::Basic::Variance->new(@_) }; croak $@ if $@;
+    my $vector   = $variance->query_vector;
+    my $c        = $vector->get_computer( 'stddev' ); return $c if defined $c;
+
+    $vector->set_computer( stddev => $this );
 
     return $this;
 }
@@ -28,18 +35,54 @@ sub recalc {
     my $this  = shift;
     my $first = shift;
 
-    my $var = $this->{v}->query;
+    delete $this->{recalc_needed};
+
+    my $var = $this->{V}->query;
+    return unless defined $var;
 
     warn "[recalc stddev] sqrt( $var )\n" if $ENV{DEBUG};
 
     $this->{stddev} = sqrt( $var );
 }
 # }}}
+# recalc_needed {{{
+sub recalc_needed {
+    my $this = shift;
+       $this->{recalc_needed} = 1;
+
+    warn "[recalc_needed stddev]\n" if $ENV{DEBUG};
+}
+# }}}
 # query {{{
 sub query {
     my $this = shift;
 
+    $this->recalc if $this->{recalc_needed};
+
+    warn "[query stddev $this->{stddev}]\n" if $ENV{DEBUG};
+
     return $this->{stddev};
+}
+# }}}
+# query_vector {{{
+sub query_vector {
+    my $this = shift;
+
+    return $this->{V}->query_vector;
+}
+# }}}
+# query_mean {{{
+sub query_mean {
+    my $this = shift;
+
+    return $this->{V}->query_mean;
+}
+# }}}
+# query_variance {{{
+sub query_variance {
+    my $this = shift;
+
+    return $this->{V};
 }
 # }}}
 
@@ -47,7 +90,7 @@ sub query {
 sub size {
     my $this = shift;
 
-    return $this->{v}->size;
+    return $this->{V}->size;
 }
 # }}}
 # set_size {{{
@@ -55,11 +98,7 @@ sub set_size {
     my $this = shift;
     my $size = shift;
 
-    warn "[set_size stddev] $size\n" if $ENV{DEBUG};
-    croak "strange stddev" if $size < 1;
-
-    $this->{v}->set_size( $size );
-    $this->recalc;
+    eval { $this->{V}->set_size( $size ) }; croak $@ if $@;
 }
 # }}}
 # insert {{{
@@ -68,8 +107,7 @@ sub insert {
 
     warn "[insert stddev]\n" if $ENV{DEBUG};
 
-    $this->{v}->insert( @_ );
-    $this->recalc;
+    $this->{V}->insert( @_ );
 }
 # }}}
 # ginsert {{{
@@ -78,8 +116,7 @@ sub ginsert {
 
     warn "[ginsert stddev]\n" if $ENV{DEBUG};
 
-    $this->{v}->ginsert( @_ );
-    $this->recalc;
+    $this->{V}->ginsert( @_ );
 }
 # }}}
 # set_vector {{{
@@ -88,39 +125,6 @@ sub set_vector {
 
     warn "[set_vector stddev]\n" if $ENV{DEBUG};
 
-    $this->{v}->set_vector( @_ );
-    $this->recalc;
+    $this->{V}->set_vector( @_ );
 }
 # }}}
-
-__END__
-# Below is stub documentation for your module. You better edit it!
-
-=head1 NAME
-
-    Statistics::Basic::StdDev
-
-=head1 SYNOPSIS
-
-A machine to calculate the standard deviation of a given vector.
-
-=head1 ENV VARIABLES
-
-=head2 DEBUG
-
-Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
-
-Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
-enable debugging dynamically.
-
-=head1 AUTHOR
-
-Please contact me with ANY suggestions, no matter how pedantic.
-
-Jettero Heller <japh@voltar-confed.org>
-
-=head1 SEE ALSO
-
-perl(1)
-
-=cut

@@ -1,9 +1,7 @@
-# vi:fdm=marker fdl=0 syntax=perl:
-# $Id: 20_stddev.t,v 1.2 2006/01/25 22:22:04 jettero Exp $
 
 use strict;
 use Test;
-use Statistics::Basic::StdDev;
+use Statistics::Basic;
 
 plan tests => 5;
 

@@ -1,30 +1,36 @@
-# vi:fdm=marker fdl=0
-# $Id: Correlation.pm,v 1.1 2006/01/25 22:20:42 jettero Exp $ 
 
 package Statistics::Basic::Correlation;
 
 use strict;
-no warnings;
+use warnings;
 use Carp;
-use Statistics::Basic::Vector;
-use Statistics::Basic::StdDev;
-use Statistics::Basic::CoVariance;
+
+use Statistics::Basic;
+
+use overload
+    '""' => sub { $Statistics::Basic::fmt->format_number($_[0]->query, $ENV{IPRES}) },
+    '0+' => sub { $_[0]->query },
+    fallback => 1; # tries to do what it would have done if this wasn't present.
 
 1;
 
 # new {{{
 sub new {
     my $this = shift;
-    my $v1   = new Statistics::Basic::Vector( shift );
-    my $v2   = new Statistics::Basic::Vector( shift );
+    my $v1   = eval { Statistics::Basic::Vector->new( shift ) }; croak $@ if $@;
+    my $v2   = eval { Statistics::Basic::Vector->new( shift ) }; croak $@ if $@;
 
     $this = bless {}, $this;
 
+    my $c = $v1->get_linked_computer( correlation => $v2 );
+    return $c if $c;
+
     $this->{sd1} = new Statistics::Basic::StdDev($v1);
     $this->{sd2} = new Statistics::Basic::StdDev($v2);
-    $this->{cov} = new Statistics::Basic::CoVariance( $v1, $v2, undef, $this->{sd1}{v}{m}, $this->{sd2}{v}{m});
+    $this->{cov} = new Statistics::Basic::Covariance( $v1, $v2 );
 
-    $this->recalc;
+    $v1->set_linked_computer( correlation => $this, $v2 );
+    $v2->set_linked_computer( correlation => $this, $v1 );
 
     return $this;
 }
@@ -33,14 +39,17 @@ sub new {
 sub recalc {
     my $this  = shift;
 
-    my $c  = $this->{cov}->query;
-    my $s1 = $this->{sd1}->query; 
-    my $s2 = $this->{sd2}->query;
+    delete $this->{recalc_needed};
+    delete $this->{correlation};
+
+    my $c  = $this->{cov}->query; return unless defined $c;
+    my $s1 = $this->{sd1}->query; return unless defined $s1;
+    my $s2 = $this->{sd2}->query; return unless defined $s2;
 
     if( $s1 == 0 or $s2 == 0 ) {
         warn "[recalc correlation] Standard deviation of 0.  Crazy infinite correlation detected.\n" if $ENV{DEBUG};
 
-        return undef;
+        return;
     }
 
     $this->{correlation} = ( $c / ($s1*$s2) );
@@ -50,11 +59,58 @@ sub recalc {
     return 1;
 }
 # }}}
+# recalc_needed {{{
+sub recalc_needed {
+    my $this = shift;
+       $this->{recalc_needed} = 1;
+
+    warn "[recalc_needed covariance]\n" if $ENV{DEBUG};
+}
+# }}}
 # query {{{
 sub query {
     my $this = shift;
 
+    $this->recalc if $this->{recalc_needed};
+
+    warn "[query correlation $this->{mean}]\n" if $ENV{DEBUG};
+
     return $this->{correlation};
+}
+# }}}
+# query_vector1 {{{
+sub query_vector1 {
+    my $this = shift;
+
+    return $this->{cov}->query_vector1;
+}
+# }}}
+# query_vector2 {{{
+sub query_vector2 {
+    my $this = shift;
+
+    return $this->{cov}->query_vector2;
+}
+# }}}
+# query_mean1 {{{
+sub query_mean1 {
+    my $this = shift;
+
+    return $this->{cov}->query_mean1;
+}
+# }}}
+# query_mean2 {{{
+sub query_mean2 {
+    my $this = shift;
+
+    return $this->{cov}->query_mean2;
+}
+# }}}
+# query_covariance {{{
+sub query_covariance {
+    my $this = shift;
+
+    return $this->{cov};
 }
 # }}}
 
@@ -70,14 +126,8 @@ sub set_size {
     my $this = shift;
     my $size = shift;
 
-    warn "[set_size correlation] $size\n" if $ENV{DEBUG};
-    croak "strange size" if $size < 1;
-
-    $this->{sd1}->set_size( $size );
-    $this->{sd2}->set_size( $size );
-
-    $this->{cov}->recalc;
-    $this->recalc;
+    eval { $this->{sd1}->set_size( $size );
+           $this->{sd2}->set_size( $size ); }; croak $@ if $@;
 }
 # }}}
 # insert {{{
@@ -90,9 +140,6 @@ sub insert {
 
     $this->{sd1}->insert( $_[0] );
     $this->{sd2}->insert( $_[1] );
-
-    $this->{cov}->recalc;
-    $this->recalc;
 }
 # }}}
 # ginsert {{{
@@ -107,11 +154,9 @@ sub ginsert {
     $this->{sd1}->ginsert( $_[0] );
     $this->{sd2}->ginsert( $_[1] );
 
+    my @s = $this->{cov}->size;
     croak "The two vectors in a Correlation object must be the same length."
-        unless $this->{sd1}->{v}->size == $this->{sd2}->{v}->size;
-
-    $this->{cov}->recalc;
-    $this->recalc;
+        unless $s[0] == $s[1];
 }
 # }}}
 # set_vector {{{
@@ -126,43 +171,8 @@ sub set_vector {
     $this->{sd1}->set_vector( $_[0] );
     $this->{sd2}->set_vector( $_[1] );
 
+    my @s = $this->{cov}->size;
     croak "The two vectors in a Correlation object must be the same length."
-        unless $this->{sd1}->{v}->size == $this->{sd2}->{v}->size;
-
-    $this->{cov}->recalc;
-
-    return $this->recalc;
+        unless $s[0] == $s[1];
 }
 # }}}
-
-__END__
-# Below is stub documentation for your module. You better edit it!
-
-=head1 NAME
-
-    Statistics::Basic::Correlation
-
-=head1 SYNOPSIS
-
-A machine to calculate the correlation of given vectors.
-
-=head1 ENV VARIABLES
-
-=head2 DEBUG
-
-Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
-
-Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
-enable debugging dynamically.
-
-=head1 AUTHOR
-
-Please contact me with ANY suggestions, no matter how pedantic.
-
-Jettero Heller <japh@voltar-confed.org>
-
-=head1 SEE ALSO
-
-perl(1)
-
-=cut

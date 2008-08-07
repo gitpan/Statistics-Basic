@@ -1,38 +1,40 @@
-# vi:fdm=marker fdl=0
-# $Id: Mode.pm,v 1.1 2006/01/25 22:20:42 jettero Exp $ 
 
 package Statistics::Basic::Mode;
 
 use strict;
-no warnings;
+use warnings;
 use Carp;
 
-use Statistics::Basic::Vector;
+use Statistics::Basic;
+use Scalar::Util qw(blessed);
+
+use overload
+    '""' => sub {
+        my $q = $_[0]->query; return $q if ref $q; # vectors interpolate themselves
+        $Statistics::Basic::fmt->format_number($_[0]->query, $ENV{IPRES});
+    },
+    '0+' => sub {
+        my $q = $_[0]->query;
+        croak "result is multimodal and cannot be used as a number" if ref $q;
+        $q;
+    },
+    fallback => 1; # tries to do what it would have done if this wasn't present.
 
 1;
 
 # new {{{
 sub new {
-    my $this     = shift;
-    my $vector   = shift;
-    my $set_size = shift;
+    my $class = shift;
 
-    warn "[new mode]\n" if $ENV{DEBUG} >= 2;
+    warn "[new median]\n" if $ENV{DEBUG} >= 2;
 
-    $this = bless {}, $this;
+    my $this   = bless {}, $class;
+    my $vector = eval { Statistics::Basic::Vector->new(@_) }; croak $@ if $@;
+    my $c      = $vector->get_computer("mode"); return $c if defined $c;
 
-    if( ref($vector) eq "ARRAY" ) {
-        $this->{v} = new Statistics::Basic::Vector( $vector, $set_size );
-    } elsif( ref($vector) eq "Statistics::Basic::Vector" ) {
-        $this->{v} = $vector;
-        $this->{v}->set_size( $set_size ) if defined $set_size;
-    } elsif( defined($vector) ) {
-        croak "argument to new() too strange";
-    } else {
-        $this->{v} = new Statistics::Basic::Vector;
-    }
+    $this->{v} = $vector;
 
-    $this->recalc;
+    $vector->set_computer( mode => $this );
 
     return $this;
 }
@@ -41,35 +43,57 @@ sub new {
 sub recalc {
     my $this        = shift;
     my $cardinality = $this->{v}->size;
+
+    delete $this->{recalc_needed};
+    delete $this->{mode};
+    return unless $cardinality > 0;
+
     my %mode;
-    my $mode_count  = 0;
+    my $max = 0;
 
-    unless( $cardinality > 0 ) {
-        $this->{mode} = undef;
-
-        return;
+    for my $val ($this->{v}->query) {
+        my $t = ++ $mode{$val};
+        $max = $t if $t > $max;
     }
+    my @a = sort {$a<=>$b} grep { $mode{$_}==$max } keys %mode;
 
-    $this->{'mode'} = undef;
-    foreach my $val ($this->{'v'}->query()) {
-      $mode{$val}++;
-      if (not defined $this->{'mode'}) {
-        $this->{'mode'} = $val;
-        $mode_count = $mode{$val};
-      } elsif ($mode{$val} > $mode_count) {
-        $this->{'mode'} = $val;
-        $mode_count = $mode{$val};
-      }
-    }
+    $this->{mode} = ( (@a == 1) ?  $a[0] : Statistics::Basic::Vector->new(\@a) );
 
-    warn "[recalc mode] count of $this->{mode} = $mode{$this->{mode}}\n" if $ENV{DEBUG};
+    warn "[recalc mode] count of $this->{mode} = $max\n" if $ENV{DEBUG};
+}
+# }}}
+# recalc_needed {{{
+sub recalc_needed {
+    my $this = shift;
+       $this->{recalc_needed} = 1;
+
+    warn "[recalc_needed mode]\n" if $ENV{DEBUG};
 }
 # }}}
 # query {{{
 sub query {
     my $this = shift;
 
+    $this->recalc if $this->{recalc_needed};
+
+    warn "[query mode $this->{mode}]\n" if $ENV{DEBUG};
+
     return $this->{mode};
+}
+# }}}
+# query_vector {{{
+sub query_vector {
+    my $this = shift;
+
+    return $this->{v};
+}
+# }}}
+# is_multimodal {{{
+sub is_multimodal {
+    my $this = shift;
+    my $that = $this->query;
+
+    return (blessed($that) ? 1:0);
 }
 # }}}
 
@@ -85,11 +109,7 @@ sub set_size {
     my $this = shift;
     my $size = shift;
 
-    warn "[set_size mode] $size\n" if $ENV{DEBUG};
-    croak "strange size" if $size < 1;
-
-    $this->{v}->set_size($size);
-    $this->recalc;
+    eval { $this->{v}->set_size($size) }; croak $@ if $@;
 }
 # }}}
 # set_vector {{{
@@ -99,7 +119,6 @@ sub set_vector {
     warn "[set_vector mode]\n" if $ENV{DEBUG};
 
     $this->{v}->set_vector(@_);
-    $this->recalc;
 }
 # }}}
 # insert {{{
@@ -109,7 +128,6 @@ sub insert {
     warn "[insert mode]\n" if $ENV{DEBUG};
 
     $this->{v}->insert(@_);
-    $this->recalc;
 }
 # }}}
 # ginsert {{{
@@ -119,44 +137,5 @@ sub ginsert {
     warn "[ginsert mode]\n" if $ENV{DEBUG};
 
     $this->{v}->ginsert(@_);
-    $this->recalc;
 }
 # }}}
-
-__END__
-# Below is stub documentation for your module. You better edit it!
-
-=head1 NAME
-
-    Statistics::Basic::Mode
-
-=head1 SYNOPSIS
-
-    A machine to calculate the mode of a given vector.
-
-=head1 ENV VARIABLES
-
-=head2 DEBUG
-
-   Try setting $ENV{DEBUG}=1; or $ENV{DEBUG}=2; to see the internals.
-
-   Also, from your bash prompt you can 'DEBUG=1 perl ./myprog.pl' to
-   enable debugging dynamically.
-
-=head1 AUTHOR
-
-    Please contact me with ANY suggestions, no matter how pedantic.
-
-    Jettero Heller <japh@voltar-confed.org>
-
-=head1 SUB-MODULE AUTHOR
-
-    The author of this module and it's tests was actually:
-
-    http://search.cpan.org/~orien/
-
-=head1 SEE ALSO
-
-    perl(1)
-
-=cut
