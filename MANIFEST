@@ -37,3 +37,8 @@ lib/Statistics/Basic/Variance.pod
 lib/Statistics/Basic/Vector.pod
 t/54_doc_example.t
 t/19_combo.t
+README
+t/08_cvec.t
+Basic/ComputedVector.pm
+t/08_filter_outliers.t
+lib/Statistics/Basic/ComputedVector.pod
