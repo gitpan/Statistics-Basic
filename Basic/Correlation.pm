@@ -8,8 +8,10 @@ use Carp;
 use Statistics::Basic;
 
 use overload
-    '""' => sub { $Statistics::Basic::fmt->format_number($_[0]->query, $ENV{IPRES}) },
+    '""' => sub { my $v = $_[0]->query; $Statistics::Basic::fmt->format_number("$v", $ENV{IPRES}) },
     '0+' => sub { $_[0]->query },
+    ( exists($ENV{TOLER}) ?  ('==' => sub { abs($_[0]-$_[1])<=$ENV{TOLER} }) : () ),
+    'eq' => sub { "$_[0]" eq "$_[1]" },
     fallback => 1; # tries to do what it would have done if this wasn't present.
 
 1;
@@ -73,7 +75,7 @@ sub query {
 
     $this->recalc if $this->{recalc_needed};
 
-    warn "[query correlation $this->{mean}]\n" if $ENV{DEBUG};
+    warn "[query correlation $this->{correlation}]\n" if $ENV{DEBUG};
 
     return $this->{correlation};
 }

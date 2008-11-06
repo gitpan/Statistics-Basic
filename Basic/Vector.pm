@@ -171,10 +171,10 @@ sub insert {
     croak "you must define a vector size before using insert()" unless defined $this->{s};
 
     for my $e (@_) {
-        if( ref($e) ) {
+        if( ref($e) and not blessed($e) ) {
             if( ref($e) eq "ARRAY" ) {
                 push @{ $this->{v} }, @$e;
-                warn "[insert $this] @$e\n" if $ENV{DEBUG} >= 2;
+                warn "[insert $this] @$e\n" if $ENV{DEBUG} >= 1;
 
             } else {
                 croak "insert() elements do not make sense";
@@ -182,7 +182,7 @@ sub insert {
 
         } else {
             push @{ $this->{v} }, $e;
-            warn "[insert $this] $e\n" if $ENV{DEBUG} >= 2;
+            warn "[insert $this] $e\n" if $ENV{DEBUG} >= 1;
         }
     }
 
@@ -195,18 +195,18 @@ sub ginsert {
     my $this = shift;
 
     for my $e (@_) {
-        if( ref($e) ) {
+        if( ref($e) and not blessed($e)) {
             if( ref($e) eq "ARRAY" ) {
                 push @{ $this->{v} }, @$e;
-                warn "[ginsert $this] @$e\n" if $ENV{DEBUG} >= 2;
+                warn "[ginsert $this] @$e\n" if $ENV{DEBUG} >= 1;
 
             } else {
-                croak "ginsert() elements do not make sense";
+                croak "insert() elements do not make sense";
             }
 
         } else {
             push @{ $this->{v} }, $e;
-            warn "[ginsert $this] $e\n" if $ENV{DEBUG} >= 2;
+            warn "[ginsert $this] $e\n" if $ENV{DEBUG} >= 1;
         }
     }
 

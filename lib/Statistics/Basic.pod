@@ -446,10 +446,36 @@ set the C<$ENV{UNBIAS}=1>;
 
 This feature was requested by Robert McGehee <xxxxxxxx@wso.williams.edu>.
 
+[NOTE 2008-11-06: L<http://cpanratings.perl.org/dist/Statistics-Basic>, this can
+also be called "population (n)" vs "sample (n-1)" and is indeed fully addressed
+right here!]
+
 =item C<$ENV{IRES}>
 
 C<$ENV{IRES}>, which defaults to 2, is passed to L<Number::Format> as the second
 argument to C<format_number> during string interpolation (see: L<overload>).
+
+=item C<$ENV{TOLER}>
+
+When set C<$ENV{TOLER}> (which by default doesn't exist in the environment
+hash), this instructs the stats objects to test true when I<within> some
+tolerable range, pretty much like this:
+
+    sub is_equal {
+        return abs($_[0]-$_[1])<$ENV{TOLER} if exists($ENV{TOLER});
+        return $_[0] ==$_[1]
+    }
+
+Caveat: Because of certain peculiarities of the overload system and for
+efficiency, this environment variable must exist prior to the compile time
+import of L<Statistics::Basic>.  If you wish to set this in perl, rather than
+from the shell, you must use a C<BEGIN> block to do it, e.g.:
+
+    BEGIN { $ENV{TOLER} = 0.000_000_001 }
+    use Statistics::Basic qw(:all);
+
+You can I<change> the tolerance at runtime, but it must be set (or unset) at
+compile time before the package loads.
 
 =back
 
