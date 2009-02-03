@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Statistics-Basic
-version:            1.6001
+version:            1.6002
 abstract:           ~
 author:  []
 license:            unknown
@@ -8,7 +8,7 @@ distribution_type:  module
 configure_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    Number::Format:  1.52
+    Number::Format:  1.61
     Scalar::Util:    0
 no_index:
     directory:
