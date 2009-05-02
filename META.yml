@@ -1,9 +1,9 @@
 --- #YAML:1.0
 name:               Statistics-Basic
-version:            1.6005
+version:            1.6007
 abstract:           ~
 author:  []
-license:            lgpl2
+license:            LGPL
 distribution_type:  module
 configure_requires:
     ExtUtils::MakeMaker:  0
@@ -14,7 +14,7 @@ requires:
     perl:            5.008
     Scalar::Util:    0
 resources:
-    repository:  http://github.com/jettero/statistics--basic/tree
+    repository:  http://github.com/jettero/statistics--basic
 no_index:
     directory:
         - t
