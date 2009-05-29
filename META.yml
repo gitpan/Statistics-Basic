@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Statistics-Basic
-version:            1.6007
+version:            1.6500
 abstract:           ~
 author:  []
 license:            LGPL
@@ -11,7 +11,7 @@ build_requires:
     ExtUtils::MakeMaker:  0
 requires:
     Number::Format:  1.61
-    perl:            5.008
+    perl:            5.008001
     Scalar::Util:    0
 resources:
     repository:  http://github.com/jettero/statistics--basic
