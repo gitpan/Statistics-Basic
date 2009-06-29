@@ -7,11 +7,13 @@ use Carp;
 
 use Statistics::Basic;
 use Scalar::Util qw(blessed);
+use base 'Statistics::Basic::_OneVectorBase';
 
 use overload
     '""' => sub {
-        my $q = $_[0]->query; return $q if ref $q; # vectors interpolate themselves
-        $Statistics::Basic::fmt->format_number($_[0]->query, $ENV{IPRES});
+        defined( my $q = $_[0]->query ) or return "n/a";
+        return $q if ref $q; # vectors interpolate themselves
+        $Statistics::Basic::fmt->format_number($_[0]->query, $Statistics::Basic::IPRES);
     },
     '0+' => sub {
         my $q = $_[0]->query;
@@ -20,122 +22,54 @@ use overload
     },
     fallback => 1; # tries to do what it would have done if this wasn't present.
 
-1;
-
-# new {{{
 sub new {
     my $class = shift;
 
-    warn "[new median]\n" if $ENV{DEBUG} >= 2;
+    warn "[new $class]\n" if $Statistics::Basic::DEBUG >= 2;
 
     my $this   = bless {}, $class;
-    my $vector = eval { Statistics::Basic::Vector->new(@_) }; croak $@ if $@;
-    my $c      = $vector->get_computer("mode"); return $c if defined $c;
+    my $vector = eval { Statistics::Basic::Vector->new(@_) } or croak $@;
+    my $c      = $vector->_get_computer("mode"); return $c if defined $c;
 
     $this->{v} = $vector;
 
-    $vector->set_computer( mode => $this );
+    $vector->_set_computer( mode => $this );
 
     return $this;
 }
-# }}}
-# recalc {{{
-sub recalc {
-    my $this        = shift;
-    my $cardinality = $this->{v}->size;
+
+sub _recalc {
+    my $this = shift;
+    my $v = $this->{v};
+    my $cardinality = $v->query_size;
 
     delete $this->{recalc_needed};
-    delete $this->{mode};
+    delete $this->{_value};
     return unless $cardinality > 0;
+    return unless $v->query_filled; # only applicable in certain circumstances
 
     my %mode;
     my $max = 0;
 
-    for my $val ($this->{v}->query) {
+    for my $val ($v->query) {
+        no warnings 'uninitialized'; ## no critic
         my $t = ++ $mode{$val};
         $max = $t if $t > $max;
     }
     my @a = sort {$a<=>$b} grep { $mode{$_}==$max } keys %mode;
 
-    $this->{mode} = ( (@a == 1) ?  $a[0] : Statistics::Basic::Vector->new(\@a) );
+    $this->{_value} = ( (@a == 1) ?  $a[0] : Statistics::Basic::Vector->new(\@a) );
 
-    warn "[recalc mode] count of $this->{mode} = $max\n" if $ENV{DEBUG};
+    warn "[recalc " . ref($this) . "] count of $this->{_value} = $max\n" if $Statistics::Basic::DEBUG;
+
+    return;
 }
-# }}}
-# recalc_needed {{{
-sub recalc_needed {
-    my $this = shift;
-       $this->{recalc_needed} = 1;
 
-    warn "[recalc_needed mode]\n" if $ENV{DEBUG};
-}
-# }}}
-# query {{{
-sub query {
-    my $this = shift;
-
-    $this->recalc if $this->{recalc_needed};
-
-    warn "[query mode $this->{mode}]\n" if $ENV{DEBUG};
-
-    return $this->{mode};
-}
-# }}}
-# query_vector {{{
-sub query_vector {
-    my $this = shift;
-
-    return $this->{v};
-}
-# }}}
-# is_multimodal {{{
 sub is_multimodal {
     my $this = shift;
     my $that = $this->query;
 
     return (blessed($that) ? 1:0);
 }
-# }}}
 
-# size {{{
-sub size {
-    my $this = shift;
-
-    return $this->{v}->size;
-}
-# }}}
-# set_size {{{
-sub set_size {
-    my $this = shift;
-    my $size = shift;
-
-    eval { $this->{v}->set_size($size) }; croak $@ if $@;
-}
-# }}}
-# set_vector {{{
-sub set_vector {
-    my $this = shift;
-
-    warn "[set_vector mode]\n" if $ENV{DEBUG};
-
-    $this->{v}->set_vector(@_);
-}
-# }}}
-# insert {{{
-sub insert {
-    my $this = shift;
-
-    warn "[insert mode]\n" if $ENV{DEBUG};
-
-    $this->{v}->insert(@_);
-}
-# }}}
-# ginsert {{{
-sub ginsert {
-    my $this = shift;
-
-    warn "[ginsert mode]\n" if $ENV{DEBUG};
-
-    $this->{v}->ginsert(@_);
-}
-# }}}
+1;

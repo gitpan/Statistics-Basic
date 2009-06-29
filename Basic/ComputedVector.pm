@@ -5,29 +5,32 @@ use strict;
 use warnings;
 use Carp;
 
+our $tag_number = 0;
+
 use Statistics::Basic;
 use base 'Statistics::Basic::Vector';
-
-1;
 
 # new {{{
 sub new {
     my $class = shift;
-    my $that  = shift;
-
-    if( defined $that ) {
-        $that = eval { Statistics::Basic::Vector->new($that) }; croak $@ if $@;
-    }
+    my $that  = eval { Statistics::Basic::Vector->new(@_) } or croak $@;
     croak "input vector must be supplied to ComputedVector" unless defined $that;
 
-    my $this = bless { c=>{}, input_vector=>$that, output_vector=>Statistics::Basic::Vector->new() }, $class;
-       $this->recalc;
+    my $this = bless { tag=>(--$tag_number), c=>{}, input_vector=>$that, output_vector=>Statistics::Basic::Vector->new() }, $class;
+       $this->_recalc_needed;
 
-    if( $_[0] ) {
-        eval { $this->set_computer(@_) }; croak $@ if $@;
-    }
+    return $this;
+}
+# }}}
+# copy {{{
+sub copy {
+    my $this = shift;
+    my $that = __PACKAGE__->new( $this->{input_vector} );
+       $that->{computer} = $this->{computer};
 
-    $this;
+    warn "copied computedvector($this -> $that)\n" if $Statistics::Basic::DEBUG >= 3;
+
+    return $that;
 }
 # }}}
 # set_filter {{{
@@ -38,15 +41,16 @@ sub set_filter {
     $this->{computer} = $cref;
 
     my $a = Scalar::Util::refaddr($this);
-    $this->{input_vector}->set_computer( "cvec_$a" => $this );
+    $this->{input_vector}->_set_computer( "cvec_$a" => $this ); # sets recalc needed in this object
+
+    return $this;
 }
 # }}}
-# recalc {{{
-sub recalc {
+# _recalc {{{
+sub _recalc {
     my $this = shift;
 
     delete $this->{recalc_needed};
-    delete $this->{mean};
 
     if( ref( my $c = $this->{computer} ) eq "CODE" ) {
         $this->{output_vector}->set_vector( [$c->($this->{input_vector}->query)] );
@@ -55,39 +59,64 @@ sub recalc {
         $this->{output_vector}->set_vector( [$this->{input_vector}->query] );
     }
 
-    warn "[recalc computed vector]\n" if $ENV{DEBUG};
-    $this->inform_computers_of_change;
+    warn "[recalc " . ref($this) . "]\n" if $Statistics::Basic::DEBUG;
+    $this->_inform_computers_of_change;
+
+    return;
 }
 # }}}
-# recalc_needed {{{
-sub recalc_needed {
+# _recalc_needed {{{
+sub _recalc_needed {
     my $this = shift;
        $this->{recalc_needed} = 1;
 
-    warn "[recalc_needed mean]\n" if $ENV{DEBUG};
+    warn "[recalc_needed " . ref($this) . "]\n" if $Statistics::Basic::DEBUG;
+
+    return;
 }
 # }}}
-# size {{{
-sub size {
+# query_size {{{
+sub query_size {
     my $this = shift;
 
-    $this->recalc if $this->{recalc_needed};
+    $this->_recalc if $this->{recalc_needed};
 
-    $this->{output_vector}->size;
+    return $this->{output_vector}->query_size;
 }
+
+# maybe deprecate this later
+*size = \&query_size unless $ENV{TEST_AUTHOR};
+
 # }}}
 # query {{{
 sub query {
     my $this = shift;
 
-    $this->recalc if $this->{recalc_needed};
+    $this->_recalc if $this->{recalc_needed};
 
     return $this->{output_vector}->query;
 }
 # }}}
 
-sub fix_size   { croak   "fix_size() makes no sense on computed vectors" }
-sub set_size   { croak   "set_size() makes no sense on computed vectors" }
-sub insert     { croak     "insert() makes no sense on computed vectors" }
-sub ginsert    { croak    "ginsert() makes no sense on computed vectors" }
-sub set_vector { croak "set_vector() makes no sense on computed vectors" }
+sub query_vector { return $_[0]{input_vector} }
+
+# query_filled {{{
+sub query_filled {
+    my $this = shift;
+
+    # even though this makes little sense, imo, we need to provide it since so many other objects call it
+
+    $this->_recalc if $this->{recalc_needed};
+
+    return $this->{input_vector}->query_filled;
+}
+# }}}
+
+sub _fix_size  { croak "fix_size() makes no sense on computed vectors" }
+sub set_size   { my $this = shift; $this->{input_vector}->set_size  (@_); return $this }
+sub insert     { my $this = shift; $this->{input_vector}->insert    (@_); return $this }
+sub ginsert    { my $this = shift; $this->{input_vector}->ginsert   (@_); return $this }
+sub append     { my $this = shift; $this->{input_vector}->append    (@_); return $this }
+sub set_vector { my $this = shift; $this->{input_vector}->set_vector(@_); return $this }
+
+1;
