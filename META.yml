@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Statistics-Basic
-version:            1.6601
+version:            1.6602
 abstract:           ~
 author:  []
 license:            LGPL
@@ -10,7 +10,7 @@ configure_requires:
 build_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    Number::Format:  1.61
+    Number::Format:  1.42
     perl:            5.006
     Scalar::Util:    0
 resources:
@@ -19,7 +19,7 @@ no_index:
     directory:
         - t
         - inc
-generated_by:       ExtUtils::MakeMaker version 6.54
+generated_by:       ExtUtils::MakeMaker version 6.56
 meta-spec:
     url:      http://module-build.sourceforge.net/META-spec-v1.4.html
     version:  1.4
