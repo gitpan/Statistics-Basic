@@ -65,4 +65,5 @@ t/75_missing_correlated.t
 t/critic.t
 t/pod.t
 t/pod_coverage.t
-META.yml                                 Module meta-data (added by MakeMaker)
+META.yml                                 Module YAML meta-data (added by MakeMaker)
+META.json                                Module JSON meta-data (added by MakeMaker)
