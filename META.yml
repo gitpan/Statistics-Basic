@@ -29,4 +29,4 @@ requires:
   perl: 5.006
 resources:
   repository: http://github.com/jettero/statistics--basic
-version: 1.6605
+version: 1.6607
