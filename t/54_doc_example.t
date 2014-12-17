@@ -1,5 +1,5 @@
-$ENV{LC_ALL} = "C";
 
+use t::locale_hack;
    use Statistics::Basic qw(:all);
 
    my $v1 = vector(1,2,3,4,5);

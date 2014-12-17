@@ -1,5 +1,5 @@
-$ENV{LC_ALL} = "C";
 
+use t::locale_hack;
 use strict;
 use Test;
 use Statistics::Basic qw(:all nofill);

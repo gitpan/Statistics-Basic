@@ -63,6 +63,7 @@ t/60_bigfloats.t
 t/75_filtered_missings.t
 t/75_missing_correlated.t
 t/critic.t
+t/locale_hack.pm
 t/pod.t
 t/pod_coverage.t
 META.yml                                 Module YAML meta-data (added by MakeMaker)

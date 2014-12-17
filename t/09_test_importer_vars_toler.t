@@ -1,4 +1,5 @@
-$ENV{LC_ALL} = "C";
+
+use t::locale_hack;
 
 BEGIN { $ENV{TOLER} = 1 }
 

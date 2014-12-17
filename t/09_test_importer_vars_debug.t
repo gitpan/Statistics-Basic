@@ -1,5 +1,5 @@
-$ENV{LC_ALL} = "C";
 
+use t::locale_hack;
 use Test;
 use Statistics::Basic qw(:all debug);
 
